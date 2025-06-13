@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_db_backup_user,access.db.backup,model_db_backup,base.group_system,1,1,1,1
+access_db_backup_file_user,access.db.backup.file,model_db_backup_file,base.group_system,1,1,1,1
+access_download_backup_wizard,access.download.backup.wizard,model_download_backup_wizard,base.group_system,1,1,1,1
+access_delete_backup_file_wizard,access.delete.backup.file.wizard,model_delete_backup_file_wizard,,1,1,1,1

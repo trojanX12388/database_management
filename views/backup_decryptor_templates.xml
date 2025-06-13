@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="decryptor_template" name="Backup Decryptor">
+        <t t-call="web.basic_layout">
+            <div class="container mt-5">
+                <h2>PN Lotus Database Backup Decryptor</h2>
+                <form action="/db_backup/decryptor/submit" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file">Encrypted File (.encrypted)</label>
+                        <input type="file" name="file" required="required" class="form-control"/>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="password">Decryption Password</label>
+                        <input type="password" name="password" required="required" class="form-control"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Decrypt &amp; Download</button>
+                </form>
+
+                <t t-if="error">
+                    <div class="alert alert-danger mt-3">
+                        <t t-esc="error"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

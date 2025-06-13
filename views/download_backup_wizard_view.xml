@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Wizard Form View -->
+  <record id="view_download_backup_wizard_form" model="ir.ui.view">
+    <field name="name">download.backup.wizard.form</field>
+    <field name="model">download.backup.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Download Backup File">
+      <p>Please enter the password to decrypt the backup file:</p>  
+        <group>
+          <field name="password" password="True"/>
+        </group>
+        <footer>
+          <button string="Download"
+                  type="object"
+                  name="action_download"
+                  class="btn-primary"
+                  context="{'default_backup_id': active_id}"/>
+          <button string="Cancel"
+                  class="btn-secondary"
+                  special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Window Action for Direct Use -->
+  <record id="action_open_password_prompt" model="ir.actions.act_window">
+    <field name="name">Enter Password</field>
+    <field name="res_model">download.backup.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{'default_backup_id': active_id}</field>
+  </record>
+
+  <!-- Action that Binds to the Backup File Form -->
+  <act_window id="action_download_backup_wizard"
+              name="Download Backup"
+              res_model="download.backup.wizard"
+              view_mode="form"
+              target="new"
+              binding_model="db.backup.file"
+              context="{'default_backup_id': active_id}"/>
+</odoo>

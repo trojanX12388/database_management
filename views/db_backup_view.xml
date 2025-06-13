@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="db_backup_tree" model="ir.ui.view">
+        <field name="name">db.backup.tree</field>
+        <field name="model">db.backup</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="database"/>
+                <field name="directory"/>
+                <field name="backup_format"/>
+                <field name="backup_times_per_day"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Server Action to Call Delete -->
+    <record id="action_multi_delete_backup_file" model="ir.actions.server">
+        <field name="name">Delete Selected Backup Files</field>
+        <field name="model_id" ref="model_db_backup_file"/>
+        <field name="binding_model_id" ref="model_db_backup_file"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">tree</field>
+        <field name="code">
+            for record in records:
+                record.unlink()
+        </field>
+    </record>
+
+    <record id="action_delete_backup_file_wizard" model="ir.actions.server">
+        <field name="name">Delete Backup Files</field>
+        <field name="model_id" ref="model_db_backup_file"/>
+        <field name="binding_model_id" ref="model_db_backup_file"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.open_confirm_delete_wizard()
+        </field>
+    </record>
+
+    <!-- Action -->
+<record id="action_db_backup" model="ir.actions.act_window">
+    <field name="name">Database Backup</field>
+    <field name="res_model">db.backup</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<record id="view_delete_backup_file_wizard_form" model="ir.ui.view">
+    <field name="name">delete.backup.file.wizard.form</field>
+    <field name="model">delete.backup.file.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Confirm Delete Backup File">
+            <group>
+                <field name="backup_file_ids" widget="many2many_tags"/>
+            </group>
+            <footer>
+                <button string="Delete" type="object" name="action_confirm_delete" class="btn btn-danger"/>
+                <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+    <!-- Form View -->
+    <record id="db_backup_form_view" model="ir.ui.view">
+        <field name="name">db.backup.form</field>
+        <field name="model">db.backup</field>
+        <field name="arch" type="xml">
+            <form string="Database Backup">
+                <header>
+                    <button name="action_backup"
+                            type="object"
+                            string="Backup Now"
+                            class="btn-primary"/>
+                    <button name="remove_backup_database"
+                            type="object"
+                            string="Remove Backup"
+                            class="btn-secondary"
+                            invisible="1"/>
+                </header>
+                <sheet>
+                    
+                    <notebook>
+                        <page string="Backup Configuration">
+                            <group>
+                                <field name="database" widget="selection" options="{'no_create': True}" required="1"/>
+                                <field name="plain_backup_password" password="True"/>
+                                <field name="directory" invisible="1"/>
+                                <field name="backup_format"/>
+                                <field name="is_auto_remove" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="backup_times_per_day"/>
+                            </group>
+                        </page>
+                       <page string="Backup Files">
+                            <field name="backup_file_ids" readonly="1">
+                                <tree delete="false" editable="false">
+                                    <field name="name"/>
+                                    <field name="backup_id" invisible="1"/>
+
+                                    <!-- Download Button -->
+                                    <button name="action_smart_download"
+                                            string="Download"
+                                            type="object"
+                                            icon="fa-download"/>
+
+                                    <!-- Delete Button -->
+                                    <button name="open_confirm_delete_wizard"
+                                            string="Delete"
+                                            type="object"
+                                            icon="fa-trash"
+                                            class="btn-danger"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
